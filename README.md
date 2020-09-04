@@ -6,7 +6,7 @@ Require modules with no caching in Node.js.
 
 In developing Node.js apps, we need to restart nodeserver every time code changed. Using nodemon maybe a way to solve this. But when the nodeserver is too complicated, it's time consuming to restart.
 
-`cache-free-require` suitable when we frequently change a little parts of code.
+`cache-free-require` is suitable when we frequently change a little parts of code.
 
 `cache-free-require` can require a module with no cache, it will always read the file content.
 
