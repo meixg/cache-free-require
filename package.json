@@ -1,0 +1,22 @@
+{
+  "name": "cache-free-require",
+  "version": "1.0.0",
+  "description": "Require modules with no caching in Node.js.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meixg/cache-free-require.git"
+  },
+  "keywords": [
+    "Node.js"
+  ],
+  "author": "meixg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meixg/cache-free-require/issues"
+  },
+  "homepage": "https://github.com/meixg/cache-free-require#readme"
+}
