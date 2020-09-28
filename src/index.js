@@ -15,7 +15,11 @@ exports.cacheFreeRequire = function(moduleName, dirname, filename = 'temp-file.j
     const path = require.resolve(moduleName, {paths: [loaderContext.context, ...module.paths]});
     const content = fs.readFileSync(path, 'utf-8');
     module.filename = filename;
-    module._compile(content, filename);
+
+    // json file is parsed and is assigned to the module exports property
+    if (filename.endsWith('.js')) {
+        module._compile(content, filename);
+    }
   
     return module.exports;
 }
