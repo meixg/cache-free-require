@@ -4,7 +4,7 @@ Require modules with no caching in Node.js.
 
 ## why
 
-In developing Node.js apps, we need to restart nodeserver every time code changed. Using nodemon maybe a way to solve this. But when the nodeserver is too complicated, it's time consuming to restart.
+In developing Node.js apps, we need to restart Node.js server every time code changed. Using nodemon maybe a way to solve this. But when the Node.js server is too complicated, it's time consuming to restart.
 
 `cache-free-require` is suitable when we frequently change a little parts of code.
 
@@ -30,4 +30,5 @@ cacheFreeRequire('some-module');
 
 ## notice
 
-Only support `.js` and `.json`, other file will be treated as `.js`.
+- Only support `.js` and `.json`, other file will be treated as `.js`.
+- Only can be used on files with no state, otherwise the state will not be persisted.
