@@ -27,3 +27,7 @@ const cacheFreeRequire = makeRequire(__dirname);
 cacheFreeRequire('./path/to/module');
 cacheFreeRequire('some-module');
 ```
+
+## notice
+
+Only support `.js` and `.json`, other file will be treated as `.js`.
