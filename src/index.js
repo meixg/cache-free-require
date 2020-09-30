@@ -10,17 +10,15 @@ exports.makeRequire = function(dirname) {
 
 exports.cacheFreeRequire = function(moduleName, dirname) {
     const loaderContext = {context: dirname};
-    const module = new Module('fake cache free module', loaderContext);
+    const module = new NativeModule(filename, loaderContext);
+  
+    module.paths = NativeModule._nodeModulePaths(loaderContext.context);
+    const path = require.resolve(moduleName, {paths: [loaderContext.context, ...module.paths]});
+    const content = fs.readFileSync(path, 'utf-8');
+    module.filename = filename;
 
-    module.paths = Module._nodeModulePaths(loaderContext.context);
-    const filePath = require.resolve(moduleName, {paths: [loaderContext.context, ...module.paths]});
-    const content = fs.readFileSync(filePath, 'utf-8');
-    module.filename = path.basename(filePath);
-
-    if (module.filename.endsWith('.json')) {
-        module.exports = JSON.parse(content);
-    }
-    else {
+    // json file is parsed and is assigned to the module exports property
+    if (filename.endsWith('.js')) {
         module._compile(content, filename);
     }
   
