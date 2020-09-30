@@ -15,7 +15,9 @@ exports.cacheFreeRequire = function(moduleName, dirname) {
     module.paths = Module._nodeModulePaths(loaderContext.context);
     const filePath = require.resolve(moduleName, {paths: [loaderContext.context, ...module.paths]});
     const content = fs.readFileSync(filePath, 'utf-8');
-    module.filename = path.basename(filePath);
+
+    const filename = filePath;
+    module.filename = filename;
 
     if (module.filename.endsWith('.json')) {
         module.exports = JSON.parse(content);
