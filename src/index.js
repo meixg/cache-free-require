@@ -2,23 +2,22 @@ const fs = require('fs');
 const Module = require('module');
 const path = require('path');
 
-exports.makeRequire = function(dirname) {
+function makeRequire(dirname) {
     return function(moduleName) {
         return exports.require(moduleName, dirname);
     }
 }
 
-exports.cacheFreeRequire = function(moduleName, dirname) {
+function cacheFreeRequire(moduleName, dirname) {
     const loaderContext = {context: dirname};
-    const module = new Module('fake cache free module', loaderContext);
+    const paths = Module._nodeModulePaths(loaderContext.context);
+    const filename = require.resolve(moduleName, {paths: [loaderContext.context, ...paths]});
 
-    module.paths = Module._nodeModulePaths(loaderContext.context);
-    const filePath = require.resolve(moduleName, {paths: [loaderContext.context, ...module.paths]});
-    const content = fs.readFileSync(filePath, 'utf-8');
-
-    const filename = filePath;
+    const module = new Module(filename, loaderContext);
     module.filename = filename;
+    module.paths = paths;
 
+    const content = fs.readFileSync(filename, 'utf-8');
     if (module.filename.endsWith('.json')) {
         module.exports = JSON.parse(content);
     }
@@ -28,3 +27,52 @@ exports.cacheFreeRequire = function(moduleName, dirname) {
   
     return module.exports;
 }
+
+const cacheFreeCondition = [];
+
+
+function freeCache(condition) {
+    if (!Array.isArray(condition)) {
+        condition = [condition];
+    }
+
+    const allStringOrReg = condition.every(item => 
+        typeof item === 'string'
+            || Object.prototype.toString.call(item) === '[object RegExp]'
+    );
+    if (!allStringOrReg) {
+        throw Error('Conditions must be string or RegExp!');
+    }
+
+    cacheFreeCondition.push(...condition);
+}
+
+function shouldCacheFree(id) {
+    return !!cacheFreeCondition.find(item => {
+        if (typeof item === 'string') {
+            return item === id;
+        }
+
+        return item.test(id);
+    });
+}
+
+
+
+const originRequire = Module.prototype.require;
+Module.prototype.require = function(id) {
+
+    if (shouldCacheFree(id)) {
+        // const filename = Module._resolveFilename(id, this, isMain);
+
+        return cacheFreeRequire(id, this.path);
+    }
+
+    return originRequire.call(this, id);
+};
+
+module.exports = {
+    cacheFreeRequire,
+    makeRequire,
+    freeCache
+};

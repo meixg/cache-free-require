@@ -13,6 +13,22 @@ In developing Node.js apps, we need to restart Node.js server every time code ch
 ## how
 
 ```javascript
+const {freeCache} = require('cache-free-require');
+
+// can be string or RegExp
+// if regExp.test(id) === true or string === id
+// there will be no cache
+freeCache([
+    /app\/index\.js/,
+    './child',
+]);
+
+require('app/index.js');
+```
+
+or by single require
+
+```javascript
 const {cacheFreeRequire} = require('cache-free-require');
 cacheFreeRequire('./path/to/module', __dirname);
 cacheFreeRequire('some-module', __dirname);
