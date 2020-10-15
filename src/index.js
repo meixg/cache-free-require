@@ -8,10 +8,13 @@ function makeRequire(dirname) {
     }
 }
 
-function cacheFreeRequire(moduleName, dirname) {
+function cacheFreeRequire(moduleName, dirname, filename) {
     const loaderContext = {context: dirname};
     const paths = Module._nodeModulePaths(loaderContext.context);
-    const filename = require.resolve(moduleName, {paths: [loaderContext.context, ...paths]});
+
+    if (!filename) {
+        filename = require.resolve(moduleName, {paths: [loaderContext.context, ...paths]});
+    }
 
     const module = new Module(filename, loaderContext);
     module.filename = filename;
@@ -62,10 +65,10 @@ function shouldCacheFree(id) {
 const originRequire = Module.prototype.require;
 Module.prototype.require = function(id) {
 
-    if (shouldCacheFree(id)) {
-        // const filename = Module._resolveFilename(id, this, isMain);
+    const filename = Module._resolveFilename(id, this, false);
+    if (shouldCacheFree(filename)) {
 
-        return cacheFreeRequire(id, this.path);
+        return cacheFreeRequire(id, this.path, filename);
     }
 
     return originRequire.call(this, id);

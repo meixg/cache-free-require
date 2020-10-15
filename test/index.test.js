@@ -4,7 +4,7 @@ const {freeCache} = require('../src/index');
 
 freeCache([
     /child1/,
-    './sample/parent'
+    /sample\/parent/
 ]);
 
 const codes = {

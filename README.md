@@ -16,11 +16,11 @@ In developing Node.js apps, we need to restart Node.js server every time code ch
 const {freeCache} = require('cache-free-require');
 
 // can be string or RegExp
-// if regExp.test(id) === true or string === id
+// if regExp.test(filename) === true or string === filename
 // there will be no cache
 freeCache([
     /app\/index\.js/,
-    './child',
+    '/absolute/path/to/child',
 ]);
 
 require('app/index.js');
