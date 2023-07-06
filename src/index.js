@@ -10,7 +10,7 @@ function makeRequire(dirname) {
 
 function cacheFreeRequire(moduleName, dirname, filename) {
     const loaderContext = {context: dirname};
-    const paths = Module._nodeModulePaths(loaderContext.context);
+    const paths = Module._nodeModulePaths(filename ? path.dirname(filename) : loaderContext.context);
 
     if (!filename) {
         filename = require.resolve(moduleName, {paths: [loaderContext.context, ...paths]});
